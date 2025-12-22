@@ -2,18 +2,17 @@
 Download raw data from S3 and clean it locally.
 """
 
-import string
+import re
 import pandas as pd
 import nltk
 from nltk.corpus import stopwords, wordnet
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
-import boto3
+from src.utils.s3_utils import download_file_from_s3
 
 
 # Download stopwords
 nltk.download("stopwords")
-
 # Download packages for lemmatization purposes
 nltk.download("punkt_tab")
 nltk.download("wordnet")
@@ -26,10 +25,6 @@ lemmatizer = WordNetLemmatizer()
 # Load stopwords once (keep negation)
 stop_words = set(stopwords.words("english"))
 stop_words.discard("not")
-
-# Define translator to use for punctuation
-translator = str.maketrans("", "", string.punctuation)
-
 
 
 def get_wordnet_pos(tag):
@@ -58,8 +53,8 @@ def clean_text(text):
     """Full preprocessing pipeline for a given text"""
     # 1. Lowercase
     text = text.lower()
-    # 2. Remove punctuation
-    text = text.translate(translator)
+    # 2. Replace punctuation by space
+    text = re.sub(r"[^\w\s]", " ", text)
     # 3. Tokenize
     tokens = word_tokenize(text)
     # 4. Lemmatize
@@ -69,19 +64,18 @@ def clean_text(text):
     return " ".join(tokens)
 
 
-def process_data(bucket_name, input_key, local_input, local_output):
+def process_data(bucket_name, s3_key, local_path_input, local_path_output):
     """Get raw data from S3 and clean it."""
-    s3 = boto3.client("s3")
     # 1. Download from S3
     print(f"Downloading raw data from S3 bucket {bucket_name}...")
-    s3.download_file(bucket_name, input_key, local_input)
+    download_file_from_s3(bucket_name, s3_key, local_path_input)
     # 2. Load and Clean
     print("Loading data...")
-    df = pd.read_parquet(local_input)
+    df = pd.read_parquet(local_path_input)
     df["content"] = df["title"] + " " + df["content"]
     df.drop("title", axis=1, inplace=True)
     df["content"] = df["content"].apply(clean_text)
     # 3. Save locally as Parquet
-    df.to_parquet(local_output, index=False)
-    print(f"Cleaned data saved locally: {local_output}")
+    df.to_parquet(local_path_output, index=False)
+    print(f"Cleaned data saved locally: {local_path_output}")
     print(f"Preview:\n{df.head()}")
