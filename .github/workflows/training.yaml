@@ -29,6 +29,7 @@ jobs:
       - name: Install dependencies
         run: |
          pip install --upgrade pip
+         pip install -r requirements/requirements_utils.txt
          pip install -r requirements/requirements_data.txt
          pip install -r requirements/requirements_model.txt
 

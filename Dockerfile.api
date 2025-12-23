@@ -15,10 +15,12 @@ RUN apt-get update && apt-get install -y \
 
 # Copy requirements first (better cache)
 COPY requirements/requirements_api.txt ./requirements_api.txt
+COPY requirements/requirements_utils.txt ./requirements_utils.txt
 
 # Install Python dependencies
 RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir -r requirements_api.txt
+    && pip install --no-cache-dir -r requirements_api.txt \
+    && pip install --no-cache-dir -r requirements_utils.txt
 
 # Copy source code
 COPY src ./src
