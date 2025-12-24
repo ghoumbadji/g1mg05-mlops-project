@@ -1,5 +1,5 @@
 """
-Test data cleaning function. 
+Test data cleaning function.
 """
 
 from src.data.clean_transform import clean_text

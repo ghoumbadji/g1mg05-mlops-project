@@ -1,15 +1,19 @@
+"""Front-end built with Gradio."""
+import os
 import gradio as gr
 import requests
-import os
+
 
 API_URL = os.getenv("API_URL")
 
+
 def analyze_sentiment(review_title, review_content):
+    """Call the sentiment analysis API."""
     if not review_title or not review_content:
         return "**Please fill in both the title and the content.**", ""
     combined_text = f"{review_title} {review_content}"
     payload = {"content": combined_text}
-    if not API_URL: 
+    if not API_URL:
         return "**API_URL not found in the environment.**"
     try:
         predict_url = f"{API_URL}/predict"
@@ -23,7 +27,10 @@ def analyze_sentiment(review_title, review_content):
             return sentiment_md, confidence_md
         return f"**Error {response.status_code}**", response.text
     except requests.exceptions.ConnectionError:
-        return "**Connection Error**", "Make sure the FastAPI backend is running."
+        return (
+            "**Connection Error**",
+            "Make sure the FastAPI backend is running."
+        )
     except Exception as e:
         return "**Unexpected Error**", str(e)
 
@@ -31,27 +38,23 @@ def analyze_sentiment(review_title, review_content):
 with gr.Blocks(title="Amazon Review Analyzer") as demo:
     gr.HTML("""
     <style>
-        .limit-width { 
+        .limit-width {
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
         }
-        
         .center-text {
             text-align: center;
         }
-
         .custom-btn {
-            background-color: #FF9900 !important; 
+            background-color: #FF9900 !important;
             color: black !important;
             font-weight: bold !important;
             border: 1px solid #e77600 !important;
         }
-                
         .custom-btn:hover {
             background-color: #FA8900 !important;
         }
-        
         .gradio-container label span {
             color: #232F3E !important;
             font-size: 1.1em !important;
@@ -60,7 +63,7 @@ with gr.Blocks(title="Amazon Review Analyzer") as demo:
             letter-spacing: 0.5px;
             margin-bottom: 5px;
             display: inline-block;
-        }    
+        }
     </style>
     """)
 
@@ -73,7 +76,10 @@ with gr.Blocks(title="Amazon Review Analyzer") as demo:
             elem_classes="center-text"
         )
         gr.Markdown(
-            "### Predict the sentiment of Amazon customer reviews using our **Inference API**",
+            (
+                "### Predict the sentiment of Amazon customer reviews "
+                "using our **Inference API**"
+            ),
             elem_classes="center-text"
         )
         gr.Markdown("---")
@@ -85,7 +91,10 @@ with gr.Blocks(title="Amazon Review Analyzer") as demo:
         )
         review_content = gr.Textbox(
             label="Review Content",
-            placeholder="e.g. I bought this item last week and I am very satisfied...",
+            placeholder=(
+                "e.g. I bought this item last week and I am very "
+                "satisfied..."
+            ),
             lines=5
         )
         analyze_btn = gr.Button("Analyze Review", elem_classes="custom-btn")

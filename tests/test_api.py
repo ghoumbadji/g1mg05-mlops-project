@@ -1,7 +1,7 @@
 """Test API"""
 
-from fastapi.testclient import TestClient
 from unittest.mock import MagicMock, patch
+from fastapi.testclient import TestClient
 from src.api.main import app
 import src.api.main
 
@@ -19,9 +19,9 @@ def test_read_root():
 
 
 def test_health_check_no_model():
-    """Test /health when the model is NOT loaded (loader is None or model is None)."""
+    """Test /health when the model is NOT loaded."""
     src.api.main.loader = None
-    response = client.get("/health")  
+    response = client.get("/health")
     mock_loader = MagicMock()
     mock_loader.model = None
     src.api.main.loader = mock_loader
@@ -42,16 +42,16 @@ def test_health_check_success():
     assert response.json() == {"status": "ok", "model_loaded": True}
 
 
-@patch("src.api.main.clean_text") # Mock preprocessing to isolate the API.
+@patch("src.api.main.clean_text")  # Mock preprocessing to isolate the API.
 def test_predict_positive_sentiment(mock_clean):
     """Test the /predict endpoint with a positive result."""
     # 1. Mock Configuration
-    mock_clean.return_value = "cleaned text" # Preprocessing result
+    mock_clean.return_value = "cleaned text"  # Preprocessing result
     mock_loader = MagicMock()
     # Simulate the tokenizer
     mock_loader.tokenizer.texts_to_sequences.return_value = [[1, 2, 3]]
     # Simulate the model prediction (Score > 0.5 = POSITIVE)
-    mock_loader.model.predict.return_value = [[0.85]] 
+    mock_loader.model.predict.return_value = [[0.85]]
     # Inject the mock
     src.api.main.loader = mock_loader
     # 2. API Call
@@ -73,7 +73,7 @@ def test_predict_negative_sentiment(mock_clean):
     mock_loader = MagicMock()
     mock_loader.tokenizer.texts_to_sequences.return_value = [[1, 2, 3]]
     # Score < 0.5 = NEGATIVE
-    mock_loader.model.predict.return_value = [[0.15]] 
+    mock_loader.model.predict.return_value = [[0.15]]
     src.api.main.loader = mock_loader
     payload = {"content": "This is terrible."}
     response = client.post("/predict", json=payload)
@@ -103,4 +103,3 @@ def test_train_endpoint():
             "message": "Training pipeline triggered in background"
         }
         mock_add_task.assert_called_once()
-

@@ -12,7 +12,9 @@ def create_lstm_model(vocab_size):
     """Defines the LSTM architecture."""
     model = tf.keras.Sequential([
         tf.keras.layers.Embedding(vocab_size, 32),
-        tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64, return_sequences=True)),
+        tf.keras.layers.Bidirectional(
+            tf.keras.layers.LSTM(64, return_sequences=True)
+        ),
         tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(16)),
         tf.keras.layers.Dense(64, activation="relu"),
         tf.keras.layers.Dropout(0.5),
@@ -31,9 +33,11 @@ def train(x_train, y_train):
     # 1. Tokenization
     max_vocab = 10000
     tokenizer = keras.preprocessing.text.Tokenizer(num_words=max_vocab)
-    tokenizer.fit_on_texts(x_train) # Fit only on training data
+    tokenizer.fit_on_texts(x_train)  # Fit only on training data
     x_train_seq = tokenizer.texts_to_sequences(x_train)
-    x_train_pad = keras.utils.pad_sequences(x_train_seq, padding="post", maxlen=128)
+    x_train_pad = keras.utils.pad_sequences(
+        x_train_seq, padding="post", maxlen=128
+    )
     # 2. Model Training
     print("Starting training...")
     model = create_lstm_model(max_vocab)
@@ -50,7 +54,8 @@ def train(x_train, y_train):
     return tokenizer, model
 
 
-def save_and_upload_models(model, tokenizer, bucket_name, model_s3_key, tokenizer_s3_key):
+def save_and_upload_models(model, tokenizer, bucket_name, model_s3_key,
+                           tokenizer_s3_key):
     """Save and upload model into S3."""
     # 3. Save Artifacts and Upload to S3
     print("Saving artifacts...")

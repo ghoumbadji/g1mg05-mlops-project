@@ -39,9 +39,15 @@ class ModelLoader:
         local_metrics = "temp_metrics.json"
         try:
             # 1. Download via your S3 utilities
-            download_file_from_s3(BUCKET_NAME, MODEL_S3_KEY, local_model)
-            download_file_from_s3(BUCKET_NAME, TOKENIZER_S3_KEY, local_tokenizer)
-            download_file_from_s3(BUCKET_NAME, METRICS_S3_KEY, local_metrics)
+            download_file_from_s3(
+                BUCKET_NAME, MODEL_S3_KEY, local_model
+            )
+            download_file_from_s3(
+                BUCKET_NAME, TOKENIZER_S3_KEY, local_tokenizer
+            )
+            download_file_from_s3(
+                BUCKET_NAME, METRICS_S3_KEY, local_metrics
+            )
             # 2. Loading into memory
             self.model = tf.keras.models.load_model(local_model)
             with open(local_tokenizer, "rb") as handle:
@@ -51,4 +57,4 @@ class ModelLoader:
             print("Model and artifacts loaded successfully.")
         except Exception as e:
             print(f"Error loading model: {e}")
-            self.model = None 
+            self.model = None

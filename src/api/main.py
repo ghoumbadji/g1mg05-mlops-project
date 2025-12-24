@@ -12,13 +12,14 @@ from src.api.model_loader import ModelLoader
 # Define the loader class
 loader = None
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Define the Lifespan Context Manager"""
     global loader
     print("Loading model...")
     loader = ModelLoader().get_instance()
-    yield # The application runs while waiting here    
+    yield  # The application runs while waiting here
     print("Shutting down...")
 
 
@@ -37,11 +38,15 @@ def read_root():
     """Root endpoint to guide the user."""
     return {
         "message": "Welcome to the Sentiment Analysis API.",
-        "documentation": "Please consult '/docs' for interactive Swagger UI documentation.",
+        "documentation": (
+            "Please consult '/docs' for interactive Swagger UI documentation."
+        ),
         "status": "alive",
         "available_endpoints": {
             "/health": "GET - Check if the model is loaded.",
-            "/predict": "POST - Send text content to get sentiment prediction.",
+            "/predict": (
+                "POST - Send text content to get sentiment prediction."
+            ),
             "/metrics": "GET - View model performance metrics.",
             "/train": "POST - Trigger the training pipeline (Background Task)."
         }
@@ -60,11 +65,15 @@ def health_check():
 @app.post("/predict")
 def predict(request: PredictionRequest):
     if not loader.model:
-        raise HTTPException(status_code=503, detail="Model service unavailable")
+        raise HTTPException(
+            status_code=503, detail="Model service unavailable"
+        )
     # Preprocessing
     cleaned_text = clean_text(request.content)
     sequences = loader.tokenizer.texts_to_sequences([cleaned_text])
-    padded = keras.utils.pad_sequences(sequences, maxlen=128, padding="post", truncating="post")
+    padded = keras.utils.pad_sequences(
+        sequences, maxlen=128, padding="post", truncating="post"
+    )
     # Inference
     prediction = loader.model.predict(padded)
     score = float(prediction[0][0])
@@ -83,7 +92,7 @@ def get_metrics():
     if not loader.metrics:
         raise HTTPException(status_code=404, detail="Metrics not found")
     return {
-        "model_performance": loader.metrics, # JSON file content
+        "model_performance": loader.metrics,  # JSON file content
         "system_info": {"status": "live", "api_version": "v1"}
     }
 

@@ -59,7 +59,9 @@ def run_model_pipeline():
     print("Training complete and artifacts uploaded.")
     print("Step 2: Evaluation")
     # 4. Prepare test data for evaluation
-    x_test_pad, y_test = evaluate_model.prepare_test_data(x_test, y_test, tokenizer)
+    x_test_pad, y_test = evaluate_model.prepare_test_data(
+        x_test, y_test, tokenizer
+    )
     # 5. Evaluate the model
     results, report_dict = evaluate_model.evaluate(model, x_test_pad, y_test)
     # 6. Save metrics
