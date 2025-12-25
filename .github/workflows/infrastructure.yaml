@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       only_plan:
-        description: "Run Terraform Plan only? (Dry Run)"
+        description: "Run Terraform Plan only ? (Dry Run)"
         required: true
         default: false
         type: boolean
