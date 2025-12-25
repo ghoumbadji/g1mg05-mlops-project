@@ -5,8 +5,8 @@ resource "aws_iam_role" "app_runner_instance_role" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
+      Action    = "sts:AssumeRole"
+      Effect    = "Allow"
       Principal = { Service = "tasks.apprunner.amazonaws.com" }
     }]
   })
@@ -24,8 +24,8 @@ resource "aws_iam_role" "app_runner_access_role" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
+      Action    = "sts:AssumeRole"
+      Effect    = "Allow"
       Principal = { Service = "build.apprunner.amazonaws.com" }
     }]
   })
