@@ -1,8 +1,8 @@
-# Classification of sentiments in Amazon customer reviews
+# Sentiment Classification in Amazon customer reviews
 
 The e-commerce sector has witnessed exponential growth in recent years, fundamentally changing consumer habits. In this digital landscape, user-generated content, specifically product reviews, has become a decisive factor in purchasing decisions. However, the sheer volume of these reviews makes manual analysis impossible.
 
-Our project focuses on **Natural Language Processing (NLP)** applied to the Amazon ecosystem. By building a model to classify the sentiment of customer reviews (positive, negative, or neutral), we aim to transform unstructured text into actionable data. This analysis allows brands not only to adapt their marketing strategies but also to identify product flaws and monitor brand reputation in real-time.
+Our project focuses on **Natural Language Processing (NLP)** applied to the Amazon ecosystem. By building a model to classify the sentiment of customer reviews (positive or negative), we aim to transform unstructured text into actionable data. This analysis allows brands not only to adapt their marketing strategies but also to identify product flaws and monitor brand reputation in real-time.
 
 ---
 
@@ -38,7 +38,7 @@ Our project focuses on **Natural Language Processing (NLP)** applied to the Amaz
 | **Data processing** | Pandas |
 | **Machine Learning** | Scikit-Learn (metrics), TensorFlow |
 | **Infrastructure as Code (IaC)** | Terraform |
-| **DevOps & CI/CD** | Docker, Github Actions, Flake8 (Linting), Pytest (Unit testing) |
+| **DevOps & CI/CD** | Docker, GitHub Actions, flake8 (Linting), Pytest (Unit testing) |
 | **Cloud** | AWS |
 
 ---
@@ -57,6 +57,7 @@ Our project focuses on **Natural Language Processing (NLP)** applied to the Amaz
 | ECR        | ecr-frontend               | Storage of Docker images for the Gradio frontend application |
 | App Runner | service-api                | Deployment and hosting of the inference API (Backend) |
 | App Runner | service-frontend           | Deployment and hosting of the User Interface (Frontend) |
+| CloudWatch | MLOps-Dashboard            | Observability: Monitoring real-time metrics (CPU, RAM, Latency) of the deployed services to ensure reliability |
 
 
 ---
